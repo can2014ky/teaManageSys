@@ -1,0 +1,59 @@
+[
+  {
+    "path": "/goodsCategory",
+    "title": "商品分类",
+    "iconClass": "machine-icon",
+    "children": [
+      {
+        "path": "/goodsCategory/tea",
+        "title": "茶叶",
+        "iconClass": "data-manager-icon"
+      },
+      {
+        "path": "/goodsCategory/teaSet",
+        "title": "茶具",
+        "iconClass": "data-manager-icon"
+      },
+      {
+        "path": "/goodsCategory/specialProduct",
+        "title": "特产",
+        "iconClass": "data-manager-icon"
+      },
+      {
+        "path": "/goodsCategory/farmProduct",
+        "title": "农产品",
+        "iconClass": "data-manager-icon"
+      },
+      {
+        "path": "/goodsCategory/traditionalCulture",
+        "title": "传统文化",
+        "iconClass": "data-manager-icon"
+      },
+      {
+        "path": "/goodsCategory/overseasPurchasing",
+        "title": "海外代购",
+        "iconClass": "data-manager-icon"
+      }
+    ]
+  },
+  {
+    "path": "/billManage",
+    "title": "订单管理",
+    "iconClass": "aggregation-icon"
+  },
+  {
+    "path": "/publicWelfare",
+    "title": "爱心公益",
+    "iconClass": "retrieval-icon"
+  },
+  {
+    "path": "/benefitCenter",
+    "title": "权益中心",
+    "iconClass": "intelligence-icon"
+  },
+  {
+    "path": "/userCenter",
+    "title": "用户中心",
+    "iconClass": "system-icon"
+  }
+]

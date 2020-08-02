@@ -1,0 +1,61 @@
+{
+    // 编辑器配置
+    "editor.fontFamily": "Consolas, 'Courier New', monospace",
+    "editor.fontSize": 14,
+    "editor.detectIndentation": false,
+    "editor.tabSize": 2,
+    "editor.wordWrap": "on",
+    "editor.wrappingIndent": "indent",
+    "editor.renderWhitespace": "none",
+    // 文件配置
+    "files.eol": "\n",
+    "files.exclude": {
+      "**/.history": true
+    },
+    // 搜索配置
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true
+    },
+    // CSS 配置
+    "css.lint.important": "error",
+    // 代码模板片段
+    "editor.snippetSuggestions": "top",
+    "editor.formatOnPaste": true,
+    // js配置
+    "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+    // prettier格式化插件配置（针对HTML/CSS/JS/LESS文件的prettier格式化规则）
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[html]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[css]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    // 针对vue文件进行格式化(Vetur插件内部默认使用prettier进行格式化,在这里进行自定义更改配置)
+    "vetur.format.defaultFormatter.html": "prettier",
+    "vetur.format.defaultFormatter.js": "prettier",
+    "vetur.format.defaultFormatter.less": "prettier",
+    "vetur.format.defaultFormatterOptions": {
+      "js-beautify-html": {
+        "wrap_attributes": "aligned-multiple"
+      },
+      "prettier": {
+        "singleQuote": true,
+        "semi": false,
+        "trailingComma": "es5",
+        "bracketSpacing": true,
+      }
+    },
+    // 保存自动修复
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    }
+  }
+  
