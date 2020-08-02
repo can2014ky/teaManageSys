@@ -60,7 +60,7 @@
         </el-dropdown>
       </div>
     </div>
-    <IocDialog
+    <TeaDialog
       :dialogConfig="dialogConfig"
       @cancelDialog="onCancelDialog"
       @sureDialog="onSureDialog">
@@ -81,12 +81,12 @@
           </el-form>
         </div>
       </template>
-    </IocDialog>
+    </TeaDialog>
   </div>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex';
-import { getLogout, postChangePassword } from '@src/api/request/test';
+import { getLogout, postChangePassword } from '@src/api/request/userCenter';
 import { removeToken } from '@src/utils/auth';
 import Menus from './menu.json';
 

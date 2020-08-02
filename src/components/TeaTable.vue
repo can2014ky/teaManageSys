@@ -208,7 +208,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <IocPagination
+    <TeaPagination
       v-if="!paginationConfig.isHidden"
       :type="paginationConfig.type && paginationConfig.type.value"
       :total="paginationConfig.total && paginationConfig.total.value"
@@ -217,7 +217,7 @@
       :pageSizes="paginationConfig.pageSizes && paginationConfig.pageSizes.value"
       @size-change="paginationConfig.sizeChange.value"
       @current-change="paginationConfig.currentChange.value">
-    </IocPagination>
+    </TeaPagination>
   </div>
 </template>
 

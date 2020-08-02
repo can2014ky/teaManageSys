@@ -18,14 +18,14 @@
       </div>
     </div>
     <div class="table-container">
-      <IocTable
+      <TeaTable
         :loading="loading"
         :tableData="tableData"
         :tableHeaderConfig="tableHeaderConfig"
         :paginationConfig="paginationConfig"
         @handleSelectionChange="handleSelectionChange"
         @handleExpandChange="handleExpandChange">
-      </IocTable>
+      </TeaTable>
     </div>
     <IocDialog
       :dialogConfig="dialogConfig"
@@ -74,7 +74,8 @@
 <script>
 import {
   getUserList, postAddUser, postDeleteUser, getUserDetail, putEditeUser, getUserPermissions,
-} from '@src/api/request/test';
+} from '@src/api/request/userCenter';
+
 import tableMixin from '@src/mixins/tableMixin';
 import _ from 'lodash';
 
