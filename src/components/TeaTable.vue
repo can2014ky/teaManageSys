@@ -1,5 +1,5 @@
 <template>
-  <div class="ioc-table-wrap">
+  <div class="tea-table-wrap">
     <el-table
       v-if="tableHeaderConfig.maxHeight && tableHeaderConfig.maxHeight.includes('px')"
       border
@@ -288,7 +288,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-  .ioc-table-wrap {
+  .tea-table-wrap {
     .link {
       overflow: hidden;
       text-overflow:ellipsis;

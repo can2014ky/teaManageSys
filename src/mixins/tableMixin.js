@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _ from 'lodash';
 
 const tableMixin = {
   data() {
@@ -8,64 +8,64 @@ const tableMixin = {
       tableData: [],
       paginationConfig: {
         type: {
-          type: "hide",
-          value: "full",
+          type: 'hide',
+          value: 'full',
         },
         page: {
-          type: "number",
+          type: 'number',
           defaultValue: 1,
           value: 1,
         },
         size: {
-          type: "number",
+          type: 'number',
           defaultValue: 20,
           value: 20,
         },
         pageSizes: {
-          type: "hide",
+          type: 'hide',
           defaultValue: [10, 20, 30, 40, 50, 100],
           value: [10, 20, 30, 40, 50, 100],
         },
         count: {
-          type: "hide",
+          type: 'hide',
           defaultValue: 0,
           value: 0,
         },
         total: {
-          type: "hide",
+          type: 'hide',
           defaultValue: 0,
           value: 0,
         },
         sizeChange: {
-          type: "hide",
+          type: 'hide',
           value: this.handleSizeChange,
         },
         currentChange: {
-          type: "hide",
+          type: 'hide',
           value: this.handleCurrentChange,
         },
       },
       dialogConfig: {
-        title: "新建",
-        width: "50%",
+        title: '新建',
+        width: '50%',
         dialogVisible: false,
       },
     };
   },
   watch: {
-    "$route.query": {
+    '$route.query': {
       handler(q) {
         Object.keys(q).forEach((key) => {
           const keys = Object.keys(this.searchList);
           if (keys.length && key in this.searchList) {
-            if (this.searchList[key] instanceof Array && typeof q[key] === "string") {
+            if (this.searchList[key] instanceof Array && typeof q[key] === 'string') {
               this.searchList[key].push(q[key]);
-            } else if (q[key] === "false" || q[key] === "true") {
-              this.searchList[key] = q[key] !== "false";
+            } else if (q[key] === 'false' || q[key] === 'true') {
+              this.searchList[key] = q[key] !== 'false';
             } else {
               this.searchList[key] = q[key];
             }
-          } else if (key in this.paginationConfig && this.paginationConfig[key].type === "number") {
+          } else if (key in this.paginationConfig && this.paginationConfig[key].type === 'number') {
             this.paginationConfig[key].value = Number(q[key]);
           }
         });
@@ -78,9 +78,9 @@ const tableMixin = {
     filterParams() {
       const filterParams = {};
       Object.keys(this.searchList).forEach((item) => {
-        if (typeof this.searchList[item] === "boolean") {
+        if (typeof this.searchList[item] === 'boolean') {
           filterParams[item] = this.searchList[item];
-        } else if (typeof this.searchList[item] === "number") {
+        } else if (typeof this.searchList[item] === 'number') {
           filterParams[item] = this.searchList[item];
         } else if (this.searchList[item]) {
           filterParams[item] = this.searchList[item];
@@ -88,7 +88,7 @@ const tableMixin = {
       });
       Object.keys(this.paginationConfig).forEach((item) => {
         const { type, defaultValue, value } = this.paginationConfig[item];
-        if (type !== "hide" && defaultValue !== value) {
+        if (type !== 'hide' && defaultValue !== value) {
           filterParams[item] = this.paginationConfig[item].value;
         }
       });
@@ -117,21 +117,21 @@ const tableMixin = {
         Object.keys(mergeFilterParams).forEach((key) => {
           if (!(key in routeInputQuery || key in this.paginationConfig)) {
             if (this.isHasDefaultParams) {
-              if (this.$route.name === "iocManager") {
+              if (this.$route.name === 'teaManager') {
                 if (
                   !(
-                    key === "updateTime" &&
-                    this.searchList.updateTime &&
-                    this.searchList.updateTime.length
+                    key === 'updateTime'
+                    && this.searchList.updateTime
+                    && this.searchList.updateTime.length
                   )
                 ) {
                   delete mergeFilterParams[key];
-                  this.searchList[key] = "";
+                  this.searchList[key] = '';
                 }
               }
             } else {
               delete mergeFilterParams[key];
-              this.searchList[key] = "";
+              this.searchList[key] = '';
             }
           }
         });
@@ -143,7 +143,9 @@ const tableMixin = {
       if (code === 0) {
         this.tableData = list;
         if (res.meta) {
-          const { total, page, size, count } = res.meta;
+          const {
+            total, page, size, count,
+          } = res.meta;
           this.paginationConfig.page.value = page;
           this.paginationConfig.size.value = size;
           this.paginationConfig.count.value = count;
@@ -201,13 +203,13 @@ const tableMixin = {
       });
     },
     onConfirm(val) {
-      this.$confirm("是否继续此执行该操作?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      this.$confirm('是否继续此执行该操作?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         closeOnClickModal: false,
         closeOnPressEscape: false,
         lockScroll: false,
-        type: "warning",
+        type: 'warning',
       })
         .then(() => {
           this.onDeleteList(val);
@@ -218,8 +220,8 @@ const tableMixin = {
         })
         .catch(() => {
           this.$message({
-            type: "info",
-            message: "已取消操作",
+            type: 'info',
+            message: '已取消操作',
           });
         });
     },
@@ -230,23 +232,23 @@ const tableMixin = {
       this.selectionList = selectionList;
     },
     async onDelete(type, row) {
-      if (type === "single") {
+      if (type === 'single') {
         this.onConfirm({ pk: row.pk });
       } else if (this.selectionList.length) {
         this.onConfirm({ pks: this.selectionList });
       } else {
         this.$message({
-          message: "您尚未选中任何一项",
-          type: "warning",
+          message: '您尚未选中任何一项',
+          type: 'warning',
         });
       }
     },
     onAdd() {
-      this.dialogConfig.title = "新建";
+      this.dialogConfig.title = '新建';
       this.dialogConfig.dialogVisible = true;
     },
     async onEdite(type, row) {
-      this.dialogConfig.title = "编辑";
+      this.dialogConfig.title = '编辑';
       await this.getTableDetail({ pk: row.pk });
       this.dialogConfig.dialogVisible = true;
     },
@@ -258,10 +260,10 @@ const tableMixin = {
     },
     async submitForm() {
       const { title } = this.dialogConfig;
-      if (title === "新建") {
+      if (title === '新建') {
         await this.addTableItem();
       }
-      if (title === "编辑") {
+      if (title === '编辑') {
         await this.editeTableItem();
       }
       await this.getTableData();
@@ -272,12 +274,12 @@ const tableMixin = {
       if (code === 0) {
         this.$message({
           message,
-          type: "success",
+          type: 'success',
         });
       } else {
         this.$message({
           message,
-          type: "warning",
+          type: 'warning',
         });
       }
     },

@@ -27,7 +27,7 @@
         @handleExpandChange="handleExpandChange">
       </TeaTable>
     </div>
-    <IocDialog
+    <TeaDialog
       :dialogConfig="dialogConfig"
       @cancelDialog="onCancelDialog"
       @sureDialog="onSureDialog">
@@ -68,7 +68,7 @@
           </el-form>
         </div>
       </template>
-    </IocDialog>
+    </TeaDialog>
   </div>
 </template>
 <script>
