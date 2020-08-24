@@ -1,7 +1,7 @@
-import { storage } from "@/utils/storage";
+import { storage } from '@/utils/storage';
 
 // 操作token
-const STORAGE_KEY = "auth_token";
+const STORAGE_KEY = 'auth_token';
 
 export function getToken() {
   return storage.get(STORAGE_KEY, null, false);
@@ -17,8 +17,8 @@ export function removeToken() {
 
 export function checkToken(token) {
   if (token) {
-    if (token.split(".")) {
-      const decodedData = JSON.parse(window.atob(token.split(".")[1]));
+    if (token.split('.')) {
+      const decodedData = JSON.parse(window.atob(token.split('.')[1]));
       const ext = parseInt(decodedData.exp, 10);
       const now = Math.floor(new Date().getTime() / 1000);
       if (ext < now) {

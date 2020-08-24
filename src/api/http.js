@@ -1,14 +1,14 @@
-import { Message } from "element-ui";
-import axios from "axios";
-import qs from "qs";
+import { Message } from 'element-ui';
+import axios from 'axios';
+import qs from 'qs';
 // eslint-disable-next-line import/no-cycle
-import router from "@src/router/index";
-import store from "@src/store/index";
+import router from '@src/router/index';
+import store from '@src/store/index';
 
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-axios.defaults.paramsSerializer = (params) => qs.stringify(params, { arrayFormat: "comma" });
+axios.defaults.paramsSerializer = params => qs.stringify(params, { arrayFormat: 'comma' });
 
-const tip = (message, type = "warning") => {
+const tip = (message, type = 'warning') => {
   Message({
     message,
     type,
@@ -16,7 +16,7 @@ const tip = (message, type = "warning") => {
 };
 const toLogin = () => {
   router.replace({
-    path: "/login",
+    path: '/login',
     query: {
       redirect: router.currentRoute.fullPath,
     },
@@ -25,8 +25,8 @@ const toLogin = () => {
 const errorHandle = (status, other) => {
   switch (status) {
     case 401:
-      tip("您尚未登录");
-      store.dispatch("site/setUserInfo", null);
+      tip('您尚未登录');
+      store.dispatch('site/setUserInfo', null);
       toLogin();
       break;
     default:
@@ -38,7 +38,7 @@ const defaultConfig = {
   baseURL: process.env.VUE_APP_BASE_API,
   timeout: 60000,
   headers: {
-    "Content-type": "application/json",
+    'Content-type': 'application/json',
   },
   withCredentials: true,
 };
@@ -47,10 +47,10 @@ const instance = axios.create(defaultConfig);
 
 // 请求拦截
 instance.interceptors.request.use(
-  (config) => config,
+  config => config,
   (error) => {
     Promise.error(error);
-  }
+  },
 );
 
 // 响应拦截
@@ -69,7 +69,7 @@ instance.interceptors.response.use(
     }
     // tip('请求超时！');
     return Promise.reject(error);
-  }
+  },
 );
 
 export default instance;

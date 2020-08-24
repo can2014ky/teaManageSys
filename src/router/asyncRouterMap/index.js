@@ -1,18 +1,18 @@
-import Layout from "@src/layout/Index.vue";
-import route from "./route";
+import Layout from '@src/layout/Index.vue';
+import route from './route';
 
-const defaultRoute = { name: "goodsCategory" };
+const defaultRoute = { name: 'goodsCategory' };
 
 export default [
   {
-    path: "/",
+    path: '/',
     component: Layout,
     meta: {
       requiresAuth: true,
     },
     children: [
       {
-        path: "",
+        path: '',
         redirect: defaultRoute,
       },
       ...route,
