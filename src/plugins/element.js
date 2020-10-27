@@ -1,4 +1,4 @@
-import Vue from "vue";
+import Vue from 'vue';
 
 import {
   Dialog,
@@ -66,9 +66,9 @@ import {
   Alert,
   Cascader,
   OptionGroup,
-} from "element-ui";
+} from 'element-ui';
 
-Vue.prototype.$ELEMENT = { size: "small", zIndex: 3000 };
+Vue.prototype.$ELEMENT = { size: 'small', zIndex: 3000 };
 
 Vue.use(Header);
 Vue.use(Aside);

@@ -16,7 +16,7 @@ const storage = {
     return base.getItem(key) || defaultVal;
   },
 
-  remove: (key) => base.removeItem(key),
+  remove: key => base.removeItem(key),
 
   claar: () => base.clear(),
 };
@@ -36,7 +36,7 @@ const session = {
     return sbase.getItem(key) || defaultVal;
   },
 
-  remove: (key) => sbase.removeItem(key),
+  remove: key => sbase.removeItem(key),
 
   claar: () => sbase.clear(),
 };
