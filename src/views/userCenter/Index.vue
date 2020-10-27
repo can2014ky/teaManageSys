@@ -73,14 +73,14 @@
 </template>
 <script>
 import {
-  getUserList, postAddUser, postDeleteUser, getUserDetail, putEditeUser, getUserPermissions,
+  getTest, getUserList, postAddUser, postDeleteUser, getUserDetail, putEditeUser, getUserPermissions,
 } from '@src/api/request/userCenter';
 
-import tableMixin from '@src/mixins/tableMixin';
+// import tableMixin from '@src/mixins/tableMixin';
 import _ from 'lodash';
 
 export default {
-  mixins: [tableMixin],
+  // mixins: [tableMixin],
   data() {
     const validatePassword = (rule, value, callback) => {
       if (value === '') {
@@ -190,9 +190,14 @@ export default {
   },
   mounted() {
     this.form = _.cloneDeep(this.formOrigin);
-    this.getUserPermissions();
+    // this.getUserPermissions();
+    this.getTest();
   },
   methods: {
+    async getTest() {
+      const res = await getTest();
+      console.log(789, res);
+    },
     async getTableData() {
       this.loading = true;
       const params = {};

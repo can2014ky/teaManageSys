@@ -1,5 +1,10 @@
 import instance from '@src/api/http';
 
+export const getTest = (params = {}) => instance({
+  url: '/test',
+  method: 'get',
+  params,
+});
 export const getUserList = (params = {}) => instance({
   url: '/user/list',
   method: 'get',

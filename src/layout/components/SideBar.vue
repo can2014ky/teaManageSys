@@ -46,7 +46,6 @@ export default {
   watch: {
     $route: {
       handler(val) {
-        console.log(666, val);
         if (val.matched[1]) {
           // this.menu = Menus.find(item => item.name === val.matched[1].meta.name);
           this.activeIndex = val.path;
