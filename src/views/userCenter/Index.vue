@@ -195,7 +195,8 @@ export default {
   },
   methods: {
     async getTest() {
-      const res = await getTest();
+      const params = { page: 1, size: 10 };
+      const res = await getTest(params);
       console.log(789, res);
     },
     async getTableData() {
