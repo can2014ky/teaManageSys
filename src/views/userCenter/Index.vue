@@ -73,14 +73,14 @@
 </template>
 <script>
 import {
-  getTest, getUserList, postAddUser, postDeleteUser, getUserDetail, putEditeUser, getUserPermissions,
+  getTest, getUserList, postAddUser, postDeleteUser, getUserDetail, putEditeUser,
 } from '@src/api/request/userCenter';
 
-// import tableMixin from '@src/mixins/tableMixin';
+import tableMixin from '@src/mixins/tableMixin';
 import _ from 'lodash';
 
 export default {
-  // mixins: [tableMixin],
+  mixins: [tableMixin],
   data() {
     const validatePassword = (rule, value, callback) => {
       if (value === '') {
@@ -143,8 +143,8 @@ export default {
             width: '120',
             fixed: 'right',
             operation: [
-              { name: '编辑', iconClass: 'el-icon-edit-outline', clickFun: this.onEdite },
-              { name: '删除', iconClass: 'el-icon-delete', clickFun: this.onDelete },
+              { name: '编辑', iconClass: 'tag-icon', clickFun: this.onEdite },
+              { name: '删除', iconClass: 'tag-icon', clickFun: this.onDelete },
             ],
           },
         ],
@@ -190,7 +190,6 @@ export default {
   },
   mounted() {
     this.form = _.cloneDeep(this.formOrigin);
-    // this.getUserPermissions();
     this.getTest();
   },
   methods: {
@@ -243,13 +242,6 @@ export default {
           }
         });
         this.form = Object.assign(this.form, data.article, { pk: data.pk });
-      }
-    },
-    async getUserPermissions() {
-      const res = await getUserPermissions();
-      const { code, data } = res;
-      if (code === 0) {
-        this.userPermissions = data;
       }
     },
     async addTableItem() {

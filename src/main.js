@@ -4,6 +4,8 @@ import VueHighcharts from 'vue-highcharts';
 import Highcharts from 'highcharts';
 // eslint-disable-next-line import/extensions
 import loadHighchartsMore from 'highcharts/highcharts-more.js';
+import _ from 'lodash';
+import dayjs from 'dayjs';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -20,6 +22,8 @@ Vue.use(VueHighcharts, {
 loadHighchartsMore(Highcharts);
 
 Vue.use(VCharts);
+Vue.prototype._ = _;
+Vue.prototype.dayjs = dayjs;
 
 Vue.config.productionTip = false;
 

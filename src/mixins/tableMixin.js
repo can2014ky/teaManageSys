@@ -3,14 +3,17 @@ import _ from 'lodash';
 const tableMixin = {
   data() {
     return {
+      isRequestOtherData: true, // 是否发送表格之外其他请求，聚合数据、favicon
+      oldSize: 10,
+      isShowPermissionTip: false,
       loading: false,
       selectionList: [],
       tableData: [],
+      orderBy: {
+        prop: '',
+        order: '',
+      },
       paginationConfig: {
-        type: {
-          type: 'hide',
-          value: 'full',
-        },
         page: {
           type: 'number',
           defaultValue: 1,
@@ -18,13 +21,8 @@ const tableMixin = {
         },
         size: {
           type: 'number',
-          defaultValue: 20,
-          value: 20,
-        },
-        pageSizes: {
-          type: 'hide',
-          defaultValue: [10, 20, 30, 40, 50, 100],
-          value: [10, 20, 30, 40, 50, 100],
+          defaultValue: 10,
+          value: 10,
         },
         count: {
           type: 'hide',
@@ -56,12 +54,9 @@ const tableMixin = {
     '$route.query': {
       handler(q) {
         Object.keys(q).forEach((key) => {
-          const keys = Object.keys(this.searchList);
-          if (keys.length && key in this.searchList) {
-            if (this.searchList[key] instanceof Array && typeof q[key] === 'string') {
-              this.searchList[key].push(q[key]);
-            } else if (q[key] === 'false' || q[key] === 'true') {
-              this.searchList[key] = q[key] !== 'false';
+          if (key in this.searchList) {
+            if (q[key] === 'false' || q[key] === 'true') {
+              this.searchList[key] = JSON.parse(q[key]);
             } else {
               this.searchList[key] = q[key];
             }
@@ -78,20 +73,20 @@ const tableMixin = {
     filterParams() {
       const filterParams = {};
       Object.keys(this.searchList).forEach((item) => {
-        if (typeof this.searchList[item] === 'boolean') {
-          filterParams[item] = this.searchList[item];
-        } else if (typeof this.searchList[item] === 'number') {
-          filterParams[item] = this.searchList[item];
+        if (this.searchList[item] === 'false' || this.searchList[item] === 'true') {
+          filterParams[item] = JSON.parse(this.searchList[item]);
         } else if (this.searchList[item]) {
           filterParams[item] = this.searchList[item];
         }
       });
-      Object.keys(this.paginationConfig).forEach((item) => {
-        const { type, defaultValue, value } = this.paginationConfig[item];
-        if (type !== 'hide' && defaultValue !== value) {
-          filterParams[item] = this.paginationConfig[item].value;
-        }
-      });
+      if (!this.isWaterfallFlow) {
+        Object.keys(this.paginationConfig).forEach((item) => {
+          const { type, defaultValue, value } = this.paginationConfig[item];
+          if (type !== 'hide' && defaultValue !== value) {
+            filterParams[item] = this.paginationConfig[item].value;
+          }
+        });
+      }
       return filterParams;
     },
   },
@@ -100,13 +95,15 @@ const tableMixin = {
       const inputQuery = {};
       const routeInputQuery = {};
       Object.keys(this.searchList).forEach((key) => {
-        if (this.searchList[key]) {
-          inputQuery[key] = this.searchList[key];
-        }
+        inputQuery[key] = this.searchList[key];
       });
       Object.keys(this.$route.query).forEach((key) => {
         if (key in this.searchList) {
-          routeInputQuery[key] = this.$route.query[key];
+          if (this.$route.query[key] === 'false' || this.$route.query[key] === 'true') {
+            routeInputQuery[key] = JSON.parse(this.$route.query[key]);
+          } else {
+            routeInputQuery[key] = this.$route.query[key];
+          }
         }
       });
       const isEqual = _.isEqual(inputQuery, routeInputQuery);
@@ -115,39 +112,24 @@ const tableMixin = {
       } else {
         const mergeFilterParams = _.merge(this.filterParams, routeInputQuery);
         Object.keys(mergeFilterParams).forEach((key) => {
-          if (!(key in routeInputQuery || key in this.paginationConfig)) {
-            if (this.isHasDefaultParams) {
-              if (this.$route.name === 'teaManager') {
-                if (
-                  !(
-                    key === 'updateTime'
-                    && this.searchList.updateTime
-                    && this.searchList.updateTime.length
-                  )
-                ) {
-                  delete mergeFilterParams[key];
-                  this.searchList[key] = '';
-                }
-              }
-            } else {
-              delete mergeFilterParams[key];
-              this.searchList[key] = '';
-            }
+          if (!(key in routeInputQuery || key in this.paginationConfig) && !this.isWaterfallFlow) {
+            delete mergeFilterParams[key];
+            // this.searchList[key] = typeof this.searchList[key] === 'string' ? '' : this.searchList[key];
           }
         });
         this.$router.push({ name: this.$route.name, query: mergeFilterParams });
       }
     },
     processResponseData(res) {
-      const { code, list } = res;
+      const { code, data } = res;
       if (code === 0) {
-        this.tableData = list;
-        if (res.meta) {
+        this.tableData = data;
+        if (res.meta && res.meta.pagination) {
           const {
-            total, page, size, count,
-          } = res.meta;
-          this.paginationConfig.page.value = page;
-          this.paginationConfig.size.value = size;
+            total, page_index, page_size, count,
+          } = res.meta.pagination;
+          this.paginationConfig.page.value = page_index;
+          this.paginationConfig.size.value = page_size;
           this.paginationConfig.count.value = count;
           this.paginationConfig.total.value = total;
         }
@@ -155,30 +137,56 @@ const tableMixin = {
       this.loading = false;
     },
     handleSizeChange(val) {
+      this.isRequestOtherData = false;
+      this.oldSize = this.paginationConfig.size.value;
       this.paginationConfig.size.value = val;
-      this.$router.push({ name: this.$route.name, query: this.filterParams });
-    },
-    handleCurrentChange(val) {
-      this.paginationConfig.page.value = val;
       this.checkQueryEqual();
-
       // this.$router.push({ name: this.$route.name, query: this.filterParams });
     },
+    handleCurrentChange(val) {
+      this.isRequestOtherData = false;
+      this.paginationConfig.page.value = val;
+      this.checkQueryEqual();
+      // this.$router.push({ name: this.$route.name, query: this.filterParams });
+    },
+    handleSortChange(sort) {
+      this.isRequestOtherData = false;
+      if (sort.column && sort.column.sortable === 'custom') {
+        this.orderBy.prop = sort.prop;
+        this.orderBy.order = sort.order;
+        this.getTableData();
+      }
+    },
+    formatOrder(order) {
+      return order === 'descending' ? '-' : '';
+    },
     onSearch() {
-      this.paginationConfig.page.value = 1;
-      this.$router.push({ name: this.$route.name, query: this.filterParams });
+      if (!this.$store.state.site.role) {
+        this.isShowPermissionTip = true;
+      } else {
+        this.isShowPermissionTip = false;
+        this.paginationConfig.page.value = 1;
+        this.filterParams.t = new Date().getTime();
+        this.$router.push({ name: this.$route.name, query: this.filterParams });
+      }
+    },
+    onLogin() {
+      window.location.href = '/quake/login';
+    },
+    onClosePermissionTip() {
+      this.isShowPermissionTip = false;
     },
     judgePageThenRequest() {
       const { length } = this.selectionList;
       const { count } = this.paginationConfig;
       if (length) {
-        if (length < count.value) {
+        if (length < count) {
           this.getTableData();
         } else {
           this.paginationConfig.page.value = this.paginationConfig.page.value - 1;
           this.getTableData();
         }
-      } else if (count.value === 1) {
+      } else if (count === 1) {
         this.paginationConfig.page.value = this.paginationConfig.page.value - 1;
         this.getTableData();
       } else {
@@ -203,7 +211,7 @@ const tableMixin = {
       });
     },
     onConfirm(val) {
-      this.$confirm('是否继续此执行该操作?', '提示', {
+      this.$confirm('此操作将删除当前所选条目或内容, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         closeOnClickModal: false,
@@ -215,27 +223,29 @@ const tableMixin = {
           this.onDeleteList(val);
           // this.$message({
           //   type: 'success',
-          //   message: '操作成功!',
+          //   message: '删除成功!',
           // });
         })
         .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消操作',
+            message: '已取消删除',
           });
         });
     },
     handleExpandChange(row) {
-      this.getRowDetail({ pk: row.pk });
+      if (row.id) {
+        this.getRowDetail({ id: row.id });
+      }
     },
     handleSelectionChange(selectionList) {
       this.selectionList = selectionList;
     },
     async onDelete(type, row) {
       if (type === 'single') {
-        this.onConfirm({ pk: row.pk });
+        this.onConfirm({ id: row.id });
       } else if (this.selectionList.length) {
-        this.onConfirm({ pks: this.selectionList });
+        this.onConfirm({ ids: this.selectionList });
       } else {
         this.$message({
           message: '您尚未选中任何一项',
@@ -249,7 +259,7 @@ const tableMixin = {
     },
     async onEdite(type, row) {
       this.dialogConfig.title = '编辑';
-      await this.getTableDetail({ pk: row.pk });
+      await this.getTableDetail({ id: row.id });
       this.dialogConfig.dialogVisible = true;
     },
     onDetail(type, row) {
